@@ -87,3 +87,83 @@ The request body must be sent as JSON and requires the following fields:
   ]
 }
 ```
+
+### 2. Login User
+
+**Endpoint:** `/users/login`  
+**Method:** `POST`  
+**Description:** Authenticates a user with their email and password, and returns an authentication token and user details if successful.
+
+#### Request Body
+The request body must be sent as JSON and requires the following fields:
+
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `email` | String | Yes | A valid email address. |
+| `password` | String | Yes | Password for the user account (Minimum 6 characters). |
+
+**Example Request Payload:**
+```json
+{
+  "email": "johndoe@example.com",
+  "password": "securepassword123"
+}
+```
+
+#### Response Details
+
+##### Success Response
+* **Status Code:** `200 OK`
+* **Content Type:** `application/json`
+* **Response Body:** Returns the generated JWT authentication token and the authenticated user object.
+
+**Example Success Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI3YTFl...",
+  "user": {
+    "_id": "66b7a1e0b57e7c9bcf281a9f",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "socketId": null
+  }
+}
+```
+
+##### Validation Error Response
+* **Status Code:** `400 Bad Request`
+* **Content Type:** `application/json`
+* **Description:** Returned when validation fails (e.g. invalid email format or password too short).
+* **Response Body:** Contains an array of validation errors.
+
+**Example Error Response:**
+```json
+{
+  "erros": [
+    {
+      "type": "field",
+      "value": "invalid-email",
+      "msg": "Invalid Email",
+      "path": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+##### Unauthorized Error Response
+* **Status Code:** `401 Unauthorized`
+* **Content Type:** `application/json`
+* **Description:** Returned when the email or password is incorrect.
+* **Response Body:** Contains an error message.
+
+**Example Error Response:**
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
