@@ -276,3 +276,135 @@ The request body must be sent as JSON and requires the following fields:
   "message": "Unauthorized"
 }
 ```
+
+---
+
+## Captain Endpoints
+
+### 1. Register Captain
+
+**Endpoint:** `/captains/register`
+**Method:** `POST`
+**Description:** Registers a new captain in the application, hashes the password, creates a vehicle profile, and generates an authentication token.
+
+#### Request Body
+
+The request body must be sent as JSON and requires the following fields:
+
+| Field                 | Type   | Required | Description                                                   |
+| :-------------------- | :----- | :------- | :------------------------------------------------------------ |
+| `fullname.firstname`  | String | Yes      | First name of the captain (Minimum 3 characters).             |
+| `fullname.lastname`   | String | No       | Last name of the captain (Minimum 3 characters if provided).  |
+| `email`               | String | Yes      | A valid email address (Must be unique).                       |
+| `password`            | String | Yes      | Password for the captain account (Minimum 6 characters).      |
+| `vehicle.color`       | String | Yes      | Vehicle color (Minimum 3 characters).                         |
+| `vehicle.plate`       | String | Yes      | Vehicle registration number (Minimum 3 characters).           |
+| `vehicle.capacity`    | Number | Yes      | Seating capacity of the vehicle (Minimum value: 1).           |
+| `vehicle.vehicleType` | String | Yes      | Type of vehicle. Allowed values: `car`, `motorcycle`, `auto`. |
+
+**Example Request Payload:**
+
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "johndoe@example.com",
+  "password": "securepassword123",
+  "vehicle": {
+    "color": "Black",
+    "plate": "MH12AB1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Response Details
+
+##### Success Response
+
+* **Status Code:** `201 Created`
+* **Content Type:** `application/json`
+* **Response Body:** Returns the generated JWT authentication token and the created captain object (excluding the password field).
+
+**Example Success Response:**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI3YTFl...",
+  "captain": {
+    "_id": "66b7a1e0b57e7c9bcf281a9f",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "status": "inactive",
+    "socketId": null,
+    "vehicle": {
+      "color": "Black",
+      "plate": "MH12AB1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+##### Validation Error Response
+
+* **Status Code:** `400 Bad Request`
+* **Content Type:** `application/json`
+* **Description:** Returned when validation fails for one or more fields.
+* **Response Body:** Contains an array of validation errors.
+
+**Example Error Response:**
+
+```json
+{
+  "errors": [
+    {
+      "type": "field",
+      "value": "jo",
+      "msg": "First name must be atleast 3 characters long",
+      "path": "fullname.firstname",
+      "location": "body"
+    },
+    {
+      "type": "field",
+      "value": "12",
+      "msg": "Number plate must be atleast 3 characters long",
+      "path": "vehicle.plate",
+      "location": "body"
+    },
+    {
+      "type": "field",
+      "value": "truck",
+      "msg": "Invalid vehicle type",
+      "path": "vehicle.vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
+
+##### Missing Fields Error Response
+
+* **Status Code:** `400 Bad Request`
+* **Content Type:** `application/json`
+* **Description:** Returned when one or more required fields are missing.
+
+**Example Error Response:**
+
+```json
+{
+  "message": "All fields are required"
+}
+```
+
