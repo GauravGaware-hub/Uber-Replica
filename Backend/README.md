@@ -408,3 +408,211 @@ The request body must be sent as JSON and requires the following fields:
 }
 ```
 
+---
+
+### 2. Login Captain
+
+**Endpoint:** `/captains/login`
+**Method:** `POST`
+**Description:** Authenticates a captain using their email and password and returns an authentication token and captain details if successful.
+
+#### Request Body
+
+The request body must be sent as JSON and requires the following fields:
+
+| Field      | Type   | Required | Description                                              |
+| :--------- | :----- | :------- | :------------------------------------------------------- |
+| `email`    | String | Yes      | A valid email address.                                   |
+| `password` | String | Yes      | Password for the captain account (Minimum 6 characters). |
+
+**Example Request Payload:**
+
+```json
+{
+  "email": "johndoe@example.com",
+  "password": "securepassword123"
+}
+```
+
+#### Response Details
+
+##### Success Response
+
+* **Status Code:** `200 OK`
+* **Content Type:** `application/json`
+* **Response Body:** Returns the generated JWT authentication token and the authenticated captain object.
+
+**Example Success Response:**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmI3YTFl...",
+  "captain": {
+    "_id": "66b7a1e0b57e7c9bcf281a9f",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "status": "inactive",
+    "socketId": null,
+    "vehicle": {
+      "color": "Black",
+      "plate": "MH12AB1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+##### Validation Error Response
+
+* **Status Code:** `400 Bad Request`
+* **Content Type:** `application/json`
+* **Description:** Returned when validation fails (e.g. invalid email format or password too short).
+* **Response Body:** Contains an array of validation errors.
+
+**Example Error Response:**
+
+```json
+{
+  "errors": [
+    {
+      "type": "field",
+      "value": "invalid-email",
+      "msg": "Invalid email",
+      "path": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+##### Unauthorized Error Response
+
+* **Status Code:** `401 Unauthorized`
+* **Content Type:** `application/json`
+* **Description:** Returned when the email or password is incorrect.
+* **Response Body:** Contains an error message.
+
+**Example Error Response:**
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+### 3. Get Captain Profile
+
+**Endpoint:** `/captains/profile`
+**Method:** `GET`
+**Description:** Returns the profile information of the currently authenticated captain.
+
+#### Headers
+
+| Header          | Value                | Required |
+| :-------------- | :------------------- | :------- |
+| `Authorization` | `Bearer <jwt_token>` | Yes      |
+
+#### Response Details
+
+##### Success Response
+
+* **Status Code:** `200 OK`
+* **Content Type:** `application/json`
+* **Response Body:** Returns the authenticated captain's details.
+
+**Example Success Response:**
+
+```json
+{
+  "captain": {
+    "_id": "66b7a1e0b57e7c9bcf281a9f",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "status": "inactive",
+    "socketId": null,
+    "vehicle": {
+      "color": "Black",
+      "plate": "MH12AB1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+##### Unauthorized Response
+
+* **Status Code:** `401 Unauthorized`
+* **Content Type:** `application/json`
+* **Description:** Returned when the authentication token is missing, invalid, or expired.
+
+**Example Error Response:**
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+### 4. Logout Captain
+
+**Endpoint:** `/captains/logout`
+**Method:** `GET`
+**Description:** Logs out the currently authenticated captain by invalidating the JWT token, adding it to the blacklist, and clearing the authentication cookie.
+
+#### Headers
+
+| Header          | Value                | Required |
+| :-------------- | :------------------- | :------- |
+| `Authorization` | `Bearer <jwt_token>` | Yes      |
+
+#### Response Details
+
+##### Success Response
+
+* **Status Code:** `200 OK`
+* **Content Type:** `application/json`
+* **Response Body:** Returns a logout confirmation message.
+
+**Example Success Response:**
+
+```json
+{
+  "message": "Logout Successfully"
+}
+```
+
+##### Unauthorized Response
+
+* **Status Code:** `401 Unauthorized`
+* **Content Type:** `application/json`
+* **Description:** Returned when the authentication token is missing, invalid, or expired.
+
+**Example Error Response:**
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+
