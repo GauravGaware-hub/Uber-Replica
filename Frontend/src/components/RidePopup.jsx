@@ -1,36 +1,33 @@
 import React from "react";
 
-const WaitingForDriver = (props) => {
+const RidePopup = (props) => {
   return (
     <div>
       <h5
         className="p-1 text-center w-[93%] absolute top-0"
         onClick={() => {
-          props.waitingForDriver(false);
+          props.setRidePopUpPanel(false);
         }}
       >
         <i className="text-3xl text-gray-200 ri-arrow-down-wide-fill"></i>
       </h5>
-
-      <div className="flex items-center justify-between">
-        <img
-          className="h-24"
-          src="https://tb-static.uber.com/prod/udam-assets/50b5e341-5426-42fd-acfe-037d63333de5.png"
-          alt=""
-        />
-        <div className="text-right">
+      <h3 className="text-2xl font-semibold mb-5">New Ride Available</h3>
+      <div className="flex items-center justify-between p-3 bg-yellow-300 rounded-lg mt-4">
+        <div className="flex items-center gap-3">
+          <img
+            className="h-12 w-10 rounded-full object-cover"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCAcjwSJ02O6R1al6KoiT1W7Or82XZZ86wTndDrAJ_Ig&s=10"
+            alt=""
+          />
           <h2 className="text-lg font-medium">
-            {props.ride?.captain.fullname.firstname}
+            {props.ride?.user.fullname.firstname +
+              " " +
+              props.ride?.user.fullname.lastname}
           </h2>
-          <h4 className="text-xl font-semibold -mt-1 -mb-1">
-            {props.ride?.captain.vehicle.plate}
-          </h4>
-          <p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
-          <h1 className="text-lg font-semibold">{props.ride?.otp}</h1>
         </div>
+        <h5 className="text-lg font-semibold">2.2 Km</h5>
       </div>
-
-      <div className="flex gpa-2 justify-between flex-col items-center ">
+      <div className="flex gap-2 justify-between flex-col items-center ">
         <div className="w-full mt-5">
           <div className="flex items-center gap-5 p-3 border-b-2 ">
             <i className="ri-map-pin-user-fill"></i>
@@ -56,9 +53,29 @@ const WaitingForDriver = (props) => {
             </div>
           </div>
         </div>
+
+        <div className="mt-5 w-full">
+          <button
+            onClick={() => {
+              props.setConfirmRidePopUpPanel(true);
+              props.confirmRide();
+            }}
+            className="mt-1 bg-gray-200 text-gray-700 font-semibold p-3 px-10 rounded-lg"
+          >
+            Accept
+          </button>
+          <button
+            onClick={() => {
+              props.setConfirmRidePopUpPanel(false);
+            }}
+            className="bg-green-600 text-white font-semibold p-3 px-10 rounded-lg"
+          >
+            Ignore
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default WaitingForDriver;
+export default RidePopup;

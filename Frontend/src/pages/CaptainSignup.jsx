@@ -4,11 +4,14 @@ import { CaptainDataContext } from '../context/CaptainContext'
 import axios from 'axios'
 
 const CaptainSignup = () => {
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [firstname, setFirstName] = useState('')
     const [lastname, setLastName] = useState('')
-    const [userData, setUserData] = useState({})
+
+    // const [userData, setUserData] = useState({})
+
     const [vehicleColor, setVehicleColor] = useState('')
     const [vehiclePlate, setVehiclePlate] = useState('')
     const [vehicleCapacity, setVehicleCapacity] = useState('')
